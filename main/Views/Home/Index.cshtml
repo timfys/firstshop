@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel='stylesheet' href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+<script src = "//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular.min.js"></script>
+<script>
+         angular.module("myapp", [])
+         .controller("HelloController", function($scope) {
+             $scope.filter={
+                 name:undefined
+             };
+             $scope.flagname=false;
+             $scope.setName = function (){
+                 if ($scope.filter.name){
+                    $scope.myname=$scope.filter.name;
+                    $scope.flagname=true;
+                 }
+             }
+            $scope.getBack = function (){
+                $scope.flagname=false;
+                $scope.filter.name=undefined;
+                $scope.option = $scope.options[-1]; 
+                $scope.h=true;
+                $scope.text="убери это от меня!";                
+            }
+            $scope.options=[{id:1, name: 'первый вариант'}, {id:2, name: 'второй вариант'}];
+            $scope.option = $scope.options[-1]; 
+            $scope.result ="выбери что-нибудь...";
+            $scope.change = function () {
+                if ($scope.h)$scope.result ="мда... ты выбрал "+$scope.option.name+". это был "+$scope.option.id+"-й вариант.";  
+            }            
+            $scope.h=true;
+            $scope.text="убери это от меня!";
+            $scope.hideThisShit = function (){
+                if (!$scope.h){
+                    $scope.h=true;
+                    $scope.change();
+                    $scope.text="ладно, покажи опять";
+                }
+                else {
+                    $scope.h=false;
+                    $scope.result =" ";
+                    $scope.text="фу, снова убери...";
+                }
+            }
+         });
+</script>
+
+<body ng-app = "myapp">
+<div ng-controller="HelloController">
+    <div style="text-align: center;" ng-show="!flagname">
+        <h2>введите имя...</h2>
+        <input style="width:200px; margin-left:auto; margin-right: auto;" type="text" ng-model="filter.name" class="form-control">
+        <input type="button" value="перейти." ng-click="setName()" class="btn btn-outline-secondary">
+        <div ng-show="filter.name.length<3"><small style="color:darkred; font-size: 14px;">имя должно содержать, хотя бы, три буквы....</small></div>
+    </div>
+    <div ng-show="flagname">
+        <h2>хей, {{myname}}! у тебя есть следующие варианты:</h2>
+        <ul>
+            <li ng-repeat="opt in options">{{opt.id}} - {{opt.name}}</li>
+        </ul>
+        <select style="width:200px;" ng-change="change()" ng-model="option" ng-options="opt as opt.name for opt in options" class="form-select">
+        </select>
+        <div>
+            <p>{{result}}</p></div>
+        <div ng-show="option.id>0"><button ng-click="hideThisShit()" class="btn btn-outline-primary">{{text}}</button></div>
+        <div style="text-align: center;"><input type="button" value="<--" ng-click="getBack()" class="btn btn-outline-primary"></div>
+    </div>
+</div>
+</body>
