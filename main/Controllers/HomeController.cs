@@ -5,15 +5,19 @@ using System.Collections;
 using System.Data;
 using System.Xml.Linq;
 using System.Reflection;
+using main.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace main.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly myContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, myContext context)
         {
+            _context = context;
             _logger = logger;
         }
         public IActionResult Index() => View();
@@ -23,18 +27,20 @@ namespace main.Controllers
         public IActionResult Jobs() => View();
         [HttpPost]
         public IActionResult Output()=> new {
+            name = _context.TestModel.FromSql($"select lastname from persons where personId=999").ToList(),
+
             favOptions = new List<jobModel>
             {
                 new jobModel() {Id=0, Name= "Товар №1"},
                 new jobModel() {Id=1, Name= "Товар №2"},
                 new jobModel() {Id=2, Name= "Товар №3"},
-            }.Select(x => new { Id = x.Id, Name = x.Name}),
+            }.Select(x => new { x.Id, x.Name}),
             workOptions = new List<workModel>
             {
                 new workModel() {Id=0, Name= "10:00-18:00"},
                 new workModel() {Id=1, Name= "18:00-22:00"},
                 new workModel() {Id=2, Name= "22:00-10:00"},
-            }.Select(x => new { Id = x.Id, Name = x.Name}),
+            }.Select(x => new { x.Id, x.Name}),
         }.ToJsonActionResult();
         public IActionResult Contacts()
         {
@@ -60,6 +66,5 @@ namespace main.Controllers
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Value { get; set; }
-
     }
 }
