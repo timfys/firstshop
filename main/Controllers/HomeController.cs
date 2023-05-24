@@ -43,9 +43,9 @@ namespace main.Controllers
             }.Select(x => new { x.Id, x.Name}),
         }.ToJsonActionResult();
         [HttpPost]
-        public IActionResult AddToCart(string item, int userId)
+        public IActionResult AddToCart([FromBody] cartModel model)
         {
-            _context.Database.ExecuteSql($"insert into cart (PersonId, ItemName) values ({userId}, '{item}')");
+            _context.Database.ExecuteSql($"insert into cart (PersonId, ItemName) values ({model.userId}, {model.item})");
             _context.SaveChanges();
             return View();
         }
@@ -77,5 +77,10 @@ namespace main.Controllers
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Value { get; set; }
+    }
+    public class cartModel
+    {
+        public int userId { get; set; }
+        public string? item { get; set; }
     }
 }

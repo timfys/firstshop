@@ -29,7 +29,7 @@
                 $scope.selectedItem=$scope.favOption.name;
                 $scope.selectedItemId = $scope.favOption.id;
             };
-            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")?userId=_userId&item=_item'.replace("_userId",$scope.id).replace("_item",$scope.selectedItem)).success(r=> alert('Запрос выполнен успешно'))
+            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")', {userId:$scope.id, item:$scope.selectedItem}).success(r=> alert('Запрос выполнен успешно'))
          });
 </script>
 
