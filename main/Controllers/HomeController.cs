@@ -27,7 +27,7 @@ namespace main.Controllers
         public IActionResult Jobs() => View();
         [HttpPost]
         public IActionResult Output()=> new {
-            name = _context.TestModel.FromSql($"select lastname from persons where personId=999").ToList(),
+            user = _context.TestModel.FromSql($"select personId id, lastname from persons where personId=999").ToList(),
 
             favOptions = new List<jobModel>
             {
@@ -42,11 +42,22 @@ namespace main.Controllers
                 new workModel() {Id=2, Name= "22:00-10:00"},
             }.Select(x => new { x.Id, x.Name}),
         }.ToJsonActionResult();
+        [HttpPost]
+        public IActionResult AddToCart(string item, int userId)
+        {
+            _context.Database.ExecuteSql($"insert into cart (PersonId, ItemName) values ({userId}, '{item}')");
+            _context.SaveChanges();
+            return View();
+        }
         public IActionResult Contacts()
         {
             return View();
         }
         public IActionResult Introduction()
+        {
+            return View();
+        }
+        public IActionResult MyCart()
         {
             return View();
         }

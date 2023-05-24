@@ -15,7 +15,9 @@
                 $scope.workOption = $scope.workOptions[0];
                 $scope.result = $scope.result == null ? "c 10:00 по 18:00":$scope.result
                 $scope.selectedItem = $scope.selectedItem==null?$scope.favOptions[0].name:$scope.selectedItem;
-                $scope.name=r.data.name[0].lastname;
+                $scope.selectedItemId = $scope.selectedItemId==null ? $scope.favOptions[0].id : $scope.selectedItemId;
+                $scope.name=r.data.user[0].lastname;
+                $scope.id=r.data.user[0].id;
             });
             $scope.selectJob=function(){
                 res=$scope.workOption.id;
@@ -25,7 +27,9 @@
                     case 2: $scope.result = "c 22:00 по 10:00"; break;
                 }
                 $scope.selectedItem=$scope.favOption.name;
+                $scope.selectedItemId = $scope.favOption.id;
             };
+            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")?userId=_userId&item=aaa'.replace("_userId",$scope.id).replace("_item",$scope.selectedItem)).success(r=> alert('Запрос выполнен успешно'))
          });
 </script>
 
@@ -33,7 +37,7 @@
 <div ng-controller="HelloController">
     <h6>Подбор услуг</h6>
 
-        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки {{name}}</p>
+        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки {{id}} - {{name}}</p>
     <h5>Товар</h5>
         <select style="width:200px;" ng-model="favOption" ng-options="favOption as favOption.name for favOption in favOptions" ng-change="selectJob();" class="form-select">
         </select>
@@ -54,6 +58,7 @@
                         Мы готовы доставить вам {{selectedItem}} {{result}} !
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" ng-click="addToCart();">Добавить в корзину</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отлично</button>
                     </div>
                 </div>

@@ -18,6 +18,7 @@ public class myContext:DbContext
 }
 public class TestModel
 {
+    public int Id { get; set; }
     public string? Lastname { get; set; }
 }
 
