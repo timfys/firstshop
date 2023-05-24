@@ -1,17 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Введение НСИ";
+    ViewData["Title"] = "О нас";
 }
 <h1>@ViewData["Title"]</h1>
 
-<!DOCTYPE html>
+<link rel='stylesheet' href="~/css/bootstrap.min.css">
+<script src="~/js/angular.min.js"></script>
+<script>
+    angular.module("myapp", [])
+        .controller("HelloController", function ($scope, $http) {
+           
+        });
+</script>
 
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<div>
-    
-</div>
+<body ng-app="myapp">
+    <div ng-controller="HelloController">
+        <h6>О нас</h6>
+
+        <p style="font-size:15px; color: darkslategray;">
+            Переходите в другие разделы для более подробной информации и заказа наших услуг!
+        </p>
+        
+    </div>
 </body>
-</html>

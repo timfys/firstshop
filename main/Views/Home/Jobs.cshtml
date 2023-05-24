@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Подбор услуг.";
+}
+<h1>@ViewData["Title"]</h1>
+
+<link rel='stylesheet' href="~/css/bootstrap.min.css">
+<script src = "~/js/angular.min.js"></script>
+<script>
+         angular.module("myapp", [])
+         .controller("HelloController", function($scope,$http) { 
+            $http.post('@Url.Action("Output")').then(function (r) {
+                $scope.favOptions = r.data.favOptions;
+                $scope.favOption = $scope.favOptions[0];
+                $scope.workOptions = r.data.workOptions;
+                $scope.workOption = $scope.workOptions[0];
+                $scope.result = $scope.result == null ? "c 10:00 по 18:00":$scope.result
+                $scope.selectedItem = $scope.selectedItem==null?$scope.favOptions[0].name:$scope.selectedItem;
+            });
+            $scope.selectJob=function(){
+                res=$scope.workOption.id;
+                switch(res){
+                    case 0: $scope.result = "c 10:00 по 18:00"; break;
+                    case 1: $scope.result = "c 18:00 по 22:00"; break;
+                    case 2: $scope.result = "c 22:00 по 10:00"; break;
+                }
+                $scope.selectedItem=$scope.favOption.name;
+            };
+         });
+</script>
+
+<body ng-app = "myapp">
+<div ng-controller="HelloController">
+    <h6>Подбор услуг</h6>
+
+        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки</p>
+    <h5>Товар</h5>
+        <select style="width:200px;" ng-model="favOption" ng-options="favOption as favOption.name for favOption in favOptions" ng-change="selectJob();" class="form-select">
+        </select>
+    <h5>Время доставки</h5>
+        <select style="width:200px;" ng-model="workOption" ng-options="workOption as workOption.name for workOption in workOptions" ng-change="selectJob();" class="form-select">
+        </select>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Узнать результат!</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Хорошая новость!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        Мы готовы доставить вам {{selectedItem}} {{result}} !
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отлично</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
