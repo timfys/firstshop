@@ -1,4 +1,5 @@
-﻿@{
+﻿@model UserModel
+@{
     ViewData["Title"] = "Подбор услуг.";
 }
 <h1>@ViewData["Title"]</h1>
@@ -8,7 +9,7 @@
 <script>
          angular.module("myapp", [])
          .controller("HelloController", function($scope,$http) { 
-            $http.post('@Url.Action("Output")').then(function (r) {
+            $http.post('@Url.Action("Output")', {id:@Model.Id}).then(function (r) {
                 $scope.favOptions = r.data.favOptions;
                 $scope.favOption = $scope.favOptions[0];
                 $scope.workOptions = r.data.workOptions;
@@ -16,8 +17,6 @@
                 $scope.result = $scope.result == null ? "c 10:00 по 18:00":$scope.result
                 $scope.selectedItem = $scope.selectedItem==null?$scope.favOptions[0].name:$scope.selectedItem;
                 $scope.selectedItemId = $scope.selectedItemId==null ? $scope.favOptions[0].id : $scope.selectedItemId;
-                $scope.name=r.data.user[0].lastname;
-                $scope.id=r.data.user[0].id;
             });
             $scope.selectJob=function(){
                 res=$scope.workOption.id;
@@ -29,7 +28,7 @@
                 $scope.selectedItem=$scope.favOption.name;
                 $scope.selectedItemId = $scope.favOption.id;
             };
-            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")', {userId:$scope.id, item:$scope.selectedItem}).success(r=> alert('Запрос выполнен успешно'))
+            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")', {userId:@Model.Id, item:$scope.selectedItem}).success(r=> alert('Запрос выполнен успешно'))
          });
 </script>
 
@@ -37,7 +36,7 @@
 <div ng-controller="HelloController">
     <h6>Подбор услуг</h6>
 
-        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки {{id}} - {{name}}</p>
+        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки @Model.Id - @Model.Lastname</p>
     <h5>Товар</h5>
         <select style="width:200px;" ng-model="favOption" ng-options="favOption as favOption.name for favOption in favOptions" ng-change="selectJob();" class="form-select">
         </select>

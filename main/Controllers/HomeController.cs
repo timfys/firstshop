@@ -5,7 +5,7 @@ using System.Collections;
 using System.Data;
 using System.Xml.Linq;
 using System.Reflection;
-using main.Context;
+using main.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace main.Controllers
@@ -24,11 +24,9 @@ namespace main.Controllers
 
         public IActionResult Privacy() => View();
         public IActionResult Personal() => View();
-        public IActionResult Jobs() => View();
+        public IActionResult Jobs() => View(_context.UserModel.FromSql($"select personId id, lastname from persons where personId=999").SingleOrDefault());
         [HttpPost]
         public IActionResult Output()=> new {
-            user = _context.TestModel.FromSql($"select personId id, lastname from persons where personId=999").ToList(),
-
             favOptions = new List<jobModel>
             {
                 new jobModel() {Id=0, Name= "Товар №1"},
@@ -43,9 +41,9 @@ namespace main.Controllers
             }.Select(x => new { x.Id, x.Name}),
         }.ToJsonActionResult();
         [HttpPost]
-        public IActionResult AddToCart([FromBody] cartModel model)
+        public IActionResult AddToCart([FromBody] CartModel model)
         {
-            _context.Database.ExecuteSql($"insert into cart (PersonId, ItemName) values ({model.userId}, {model.item})");
+            _context.Database.ExecuteSql($"insert into cart (PersonId, ItemName) values ({model.UserId}, {model.Item})");
             _context.SaveChanges();
             return View();
         }
@@ -59,8 +57,11 @@ namespace main.Controllers
         }
         public IActionResult MyCart()
         {
-            return View();
+            return View(_context.UserModel.FromSql($"select personId id, lastname from persons where personId=999").SingleOrDefault());
         }
+        [HttpPost]
+        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select PersonId UserId, ItemName Item from Cart").ToList().ToJsonActionResult();
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -78,9 +79,5 @@ namespace main.Controllers
         public string? Name { get; set; }
         public string? Value { get; set; }
     }
-    public class cartModel
-    {
-        public int userId { get; set; }
-        public string? item { get; set; }
-    }
+    
 }
