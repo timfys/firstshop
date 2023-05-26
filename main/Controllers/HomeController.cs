@@ -66,7 +66,7 @@ namespace main.Controllers
             return View(_user.GetUser());
         }
         [HttpPost]
-        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select PersonId UserId, ItemName Item from Cart").ToList().ToJsonActionResult();
+        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart").ToList().ToJsonActionResult();
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

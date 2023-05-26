@@ -20,13 +20,15 @@
         <table class="table table-hover" ng-show="cart.length > 0">
             <thead>
                 <tr>
-                    <th id="name" colspan="5" style="border:0;text-align: center; font-weight:bold">Пользователь</th>
+                    <th id="name" colspan="3" style="border:0;text-align: center; font-weight:bold">№ п/п</th>
+                    <th id="name" colspan="3" style="border:0;text-align: center; font-weight:bold">Пользователь</th>
                     <th id="name" colspan="3" style="border:1px;text-align: center; font-weight:bold">Наименование</th>
                 </tr>               
             </thead>
             <tbody>
                 <tr ng-repeat="item in cart">
-                    <td colspan ="5" style="text-align: center">{{item.userId}}</td>
+                    <td colspan ="3" style="text-align: center">{{item.id}}</td>
+                    <td colspan ="3" style="text-align: center">{{item.userId}}</td>
                     <td colspan ="3" style="text-align: center">{{item.item}}</td>
                 </tr>         
             </tbody>
