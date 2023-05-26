@@ -5,8 +5,11 @@ using System.Collections;
 using System.Data;
 using System.Xml.Linq;
 using System.Reflection;
-using main.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace main.Controllers
 {
@@ -14,19 +17,22 @@ namespace main.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly myContext _context;
+        private readonly User _user;
 
-        public HomeController(ILogger<HomeController> logger, myContext context)
+        public HomeController(ILogger<HomeController> logger, myContext context, User user)
         {
             _context = context;
             _logger = logger;
+            _user = user;
         }
         public IActionResult Index() => View();
 
         public IActionResult Privacy() => View();
         public IActionResult Personal() => View();
-        public IActionResult Jobs() => View(_context.UserModel.FromSql($"select personId id, lastname from persons where personId=999").SingleOrDefault());
+        public IActionResult Jobs() => View(_user.GetUser());
         [HttpPost]
         public IActionResult Output()=> new {
+            a=_user.GetUser(),
             favOptions = new List<jobModel>
             {
                 new jobModel() {Id=0, Name= "Товар №1"},
@@ -57,7 +63,7 @@ namespace main.Controllers
         }
         public IActionResult MyCart()
         {
-            return View(_context.UserModel.FromSql($"select personId id, lastname from persons where personId=999").SingleOrDefault());
+            return View(_user.GetUser());
         }
         [HttpPost]
         public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select PersonId UserId, ItemName Item from Cart").ToList().ToJsonActionResult();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using main.Models;
+using main;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("myDbConnection");
 builder.Services.AddDbContext<myContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddScoped<User>();
 
 var app = builder.Build();//
 

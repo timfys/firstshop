@@ -6,7 +6,6 @@ namespace main;
 
 public static class WebJsonExtensions
 {
-    //public static IActionResult ToJsonActionResultWithDate(this object item) => new ContentResult { Content = item.ToCamelCaseJsonWithDate(), ContentType = "application/json" };
     public static readonly JsonSerializerOptions CamelCase = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
