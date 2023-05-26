@@ -53,6 +53,13 @@ namespace main.Controllers
             _context.SaveChanges();
             return View();
         }
+        [HttpPost]
+        public IActionResult RemoveFromCart([FromBody] CartModel model)
+        {
+            _context.Database.ExecuteSql($"delete from cart where id={model.Id}");
+            _context.SaveChanges();
+            return View();
+        }
         public IActionResult Contacts()
         {
             return View();

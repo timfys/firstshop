@@ -11,6 +11,7 @@
         .controller("HelloController", function ($scope, $http) {
             $scope.outputCart=()=>$http.post('@Url.Action("OutputCart")', {userId:@Model.Id}).then(r=>$scope.cart=r.data);  
             $scope.outputCart();
+            $scope.removeFromCart = (id) => $http.post('@Url.Action("RemoveFromCart")', { id:id }).finally(r => {alert('Удалено успешно'),$scope.outputCart()})
         });
 </script>
 
@@ -30,6 +31,7 @@
                     <td colspan ="3" style="text-align: center">{{item.id}}</td>
                     <td colspan ="3" style="text-align: center">{{item.userId}}</td>
                     <td colspan ="3" style="text-align: center">{{item.item}}</td>
+                    <td colspan="1" style="text-align: center"><button type="button" class="btn btn-danger" ng-click="removeFromCart(item.id);">Убрать из корзины</button></td>
                 </tr>         
             </tbody>
         </table>
