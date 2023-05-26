@@ -9,12 +9,27 @@ namespace main
 {
     public class User
     {
-        public UserModel GetUser() => _context.UserModel.FromSql($"select personId id, lastname from persons where personId=999").SingleOrDefault();
+        public Persons GetUser(int id) => _context.Persons.Where(x=>x.Id==id).FirstOrDefault();
+        public Persons GetCurrentUser() {
+            CurrentId = Convert.ToInt32(_accessor.HttpContext.Request.Cookies["id"]);
+            return GetUser(CurrentId) != null ? GetUser(Convert.ToInt32(CurrentId)) : GetUser(Convert.ToInt32(999));
+        }
         private readonly myContext _context;
+        private readonly IHttpContextAccessor _accessor;
 
-        public User(myContext context)
+        public User(myContext context, IHttpContextAccessor accessor)
         {
             _context = context;
+            _accessor = accessor;
+        }
+        public int CurrentId;
+
+        public void Update(Persons user)
+        {
+            CurrentId = user.Id;
+            _accessor.HttpContext.Response.Cookies.Append("id", CurrentId.ToString());
+            _context.Entry(user).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

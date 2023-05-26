@@ -29,10 +29,9 @@ namespace main.Controllers
 
         public IActionResult Privacy() => View();
         public IActionResult Personal() => View();
-        public IActionResult Jobs() => View(_user.GetUser());
+        public IActionResult Jobs() => View(_user.GetCurrentUser());
         [HttpPost]
         public IActionResult Output()=> new {
-            a=_user.GetUser(),
             favOptions = new List<jobModel>
             {
                 new jobModel() {Id=0, Name= "Товар №1"},
@@ -60,6 +59,13 @@ namespace main.Controllers
             _context.SaveChanges();
             return View();
         }
+        [HttpPost]
+        public IActionResult Change()
+        {
+            var user = _user.GetUser(999);
+            _user.Update(_user.GetUser(999));
+            return View();
+        }
         public IActionResult Contacts()
         {
             return View();
@@ -70,11 +76,14 @@ namespace main.Controllers
         }
         public IActionResult MyCart()
         {
-            return View(_user.GetUser());
+            var user = _user.GetUser(998);
+            _user.Update(user);
+            return View(_user.GetCurrentUser());
         }
         [HttpPost]
-        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart").ToList().ToJsonActionResult();
-        
+        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart where PersonId={model.Id}").ToList().ToJsonActionResult();
+        [HttpPost]
+        public IActionResult OutputUsers() => _context.Persons.ToList().ToJsonActionResult();
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
