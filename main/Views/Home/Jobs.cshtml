@@ -28,7 +28,9 @@
                 $scope.selectedItem=$scope.favOption.name;
                 $scope.selectedItemId = $scope.favOption.id;
             };
-            $scope.addToCart=()=>$http.post('@Url.Action("AddToCart")', {userId:@Model.Id, item:$scope.selectedItem}).success(r=> alert('Запрос выполнен успешно'))
+            $scope.addToCart = () => $http.post('@Url.Action("AddToCart")', { userId: @Model.Id, item: $scope.selectedItem }).finally(r => {
+                alert('Запрос выполнен успешно'), $('#exampleModal').modal('hide')
+            })
          });
 </script>
 

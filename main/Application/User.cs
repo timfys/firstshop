@@ -28,8 +28,7 @@ namespace main
         {
             CurrentId = user.Id;
             _accessor.HttpContext.Response.Cookies.Append("id", CurrentId.ToString());
-            _context.Entry(user).State = EntityState.Modified;
-            _context.SaveChanges();
+            GetCurrentUser();
         }
     }
 }

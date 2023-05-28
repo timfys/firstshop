@@ -1,15 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using main.Models;
-using System.Collections;
 using System.Data;
-using System.Xml.Linq;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
-using System.Security.Principal;
 
 namespace main.Controllers
 {
@@ -60,11 +53,10 @@ namespace main.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Change()
+        public void Change([FromBody] TestModel model)
         {
-            var user = _user.GetUser(999);
-            _user.Update(_user.GetUser(999));
-            return View();
+            var user = _user.GetUser(model.Id);
+            _user.Update(user);
         }
         public IActionResult Contacts()
         {
@@ -74,12 +66,7 @@ namespace main.Controllers
         {
             return View();
         }
-        public IActionResult MyCart()
-        {
-            var user = _user.GetUser(998);
-            _user.Update(user);
-            return View(_user.GetCurrentUser());
-        }
+        public IActionResult MyCart(int id) => View(_user.GetCurrentUser());
         [HttpPost]
         public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart where PersonId={model.Id}").ToList().ToJsonActionResult();
         [HttpPost]
