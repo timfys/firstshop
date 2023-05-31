@@ -18,7 +18,7 @@ namespace main.Controllers
             _logger = logger;
             _user = user;
         }
-        public IActionResult _Layout() => View();
+        public IActionResult _Layout() => View(_user.GetCurrentUser());
         [HttpPost]
         public void Change([FromBody] TestModel model)
         {

@@ -18,10 +18,10 @@ namespace main.Controllers
             _logger = logger;
             _user = user;
         }
-        public IActionResult Index() => View();
+        public IActionResult Index() => View(_user.GetCurrentUser());
 
-        public IActionResult Privacy() => View();
-        public IActionResult Personal() => View();
+        public IActionResult Privacy() => View(_user.GetCurrentUser());
+        public IActionResult Personal() => View(_user.GetCurrentUser());
         public IActionResult Jobs() => View(_user.GetCurrentUser());
         [HttpPost]
         public IActionResult Output()=> Json(new {
@@ -60,11 +60,11 @@ namespace main.Controllers
         }
         public IActionResult Contacts()
         {
-            return View();
+            return View(_user.GetCurrentUser());
         }
         public IActionResult Introduction()
         {
-            return View();
+            return View(_user.GetCurrentUser());
         }
         public IActionResult MyCart(int id) => View(_user.GetCurrentUser());
         [HttpPost]
