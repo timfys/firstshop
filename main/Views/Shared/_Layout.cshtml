@@ -35,6 +35,9 @@
                         <a class="nav-link nav-link" asp-area="" asp-controller="Home" asp-action="Contacts">Контактная информация</a>
                     </li>                    
                 </ul>
+                    <small style="font-size:15px; color: darkslategray;">
+                        @Model.Lastname
+                    </small>
                     <form class="form-inline my-2 my-lg-0">
                         <a class="btn btn-outline-success my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#loginModal" id="loginButton">Вход</a>
                     </form>

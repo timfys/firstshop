@@ -38,7 +38,7 @@
 <div ng-controller="HelloController">
     <h6>Подбор услуг</h6>
 
-        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки @Model.Id - @Model.Lastname</p>
+        <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки</p>
     <h5>Товар</h5>
         <select style="width:200px;" ng-model="favOption" ng-options="favOption as favOption.name for favOption in favOptions" ng-change="selectJob();" class="form-select">
         </select>
