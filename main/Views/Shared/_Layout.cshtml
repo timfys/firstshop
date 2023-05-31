@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model Persons
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -7,12 +9,16 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/main.styles.css" asp-append-version="true"/>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <link rel='stylesheet' href="~/css/bootstrap.min.css">
+    <script src="~/js/angular.min.js"></script>
 </head>
-<body>
+<body ng-app="myapp" ng-controller="HelloController">
 <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-           @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Выход</a>*@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,26 +36,58 @@
                     </li>                    
                 </ul>
                     <form class="form-inline my-2 my-lg-0">
+                        <a class="btn btn-outline-success my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#loginModal" id="loginButton">Вход</a>
+                    </form>
+                    <form class="form-inline my-2 my-lg-0">
                         <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Home" asp-action="MyCart">Моя корзина</a>
                     </form>
             </div>
         </div>
     </nav>
 </header>
+
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
-
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Вход в систему</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="basic-url" class="form-label">Логин</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" aria-label="Sizing example input" placeholer="Логин..." id="login">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="login();">Войти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2022 - main - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2023 - main - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        if(@Model.Id==998)$('#loginButton').hide();
+        function login(){
+            $.ajax({
+                url: "@Url.Action("Change","Shared")",
+                data: JSON.stringify({ id: parseInt($('#login').val()) }),
+                type: "POST",
+                'contentType': 'application/json',
+                success: (result) =>{$('#loginModal').modal('hide');window.location.reload()},
+                error: (e) => alert(JSON.stringify(e)),
+            });
+        }
+    </script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
