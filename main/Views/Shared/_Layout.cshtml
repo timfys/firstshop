@@ -80,7 +80,8 @@
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" aria-label="Sizing example input" placeholer="Пароль..." id="password">
                         </div>
-                    </div>
+                        <div class="alert alert-danger" role="alert" id="error"></div>
+                </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" onclick="login();">Войти</button>
                     </div>
@@ -92,7 +93,8 @@
         &copy; 2023 - main - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
-    <script>
+    <script>;
+        $('#error').fadeOut(1);
         function login() {
             $.ajax({
                 url: "@Url.Action("Change","Shared")",
@@ -100,7 +102,7 @@
                 type: "POST",
                 'contentType': 'application/json',
                 success: (result) => {
-                    if (result != true){alert('неверный логин/пароль');}
+                    if (result != true) { $('#error').html('неверный логин/пароль...'); $('#error').fadeIn(500); $('#error').fadeOut(1500); }
                     else {$('#loginModal').modal('hide'); window.location.reload();}
                 },
                 error: (e) => alert(JSON.stringify(e)),
