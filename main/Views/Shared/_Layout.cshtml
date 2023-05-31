@@ -76,7 +76,7 @@
     </div>
 </footer>
     <script>
-        if(@Model.Id==998)$('#loginButton').hide();
+        //if(@Model.Id!=998)$('#loginButton').hide(); //кнопка ток для гостя будет
         function login(){
             $.ajax({
                 url: "@Url.Action("Change","Shared")",

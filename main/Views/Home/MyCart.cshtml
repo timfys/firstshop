@@ -13,12 +13,6 @@
             $scope.outputCart=()=>$http.post('@Url.Action("OutputCart")', {id:@Model.Id}).then(r=>{$scope.cart=r.data});  
             $scope.outputCart();
             $scope.removeFromCart = (id) => $http.post('@Url.Action("RemoveFromCart")', { id:id }).finally(r => {alert('Удалено успешно'),$scope.outputCart()});
-            $scope.allUsers = () => $http.post('@Url.Action("OutputUsers")').then(r=> {
-                 $scope.users = r.data, $scope.user=$scope.users[0],$scope.selectedItemId = $scope.selectedItemId==null ? $scope.users[0].id : $scope.selectedItemId
-            }); 
-            $scope.allUsers();
-            $scope.selectUser=()=>$scope.selectedItemId = $scope.user.id;
-            $scope.changeUser = () => $http.post('@Url.Action("Change")', {id:$scope.selectedItemId}).finally(r => window.location.reload());
         });
 </script>
 
@@ -45,10 +39,5 @@
         <p style="font-size:15px; color: darkslategray;" ng-hide="cart.length > 0">
             Тут пока пусто
         </p>
-        <div class ="col-md-8">
-            <select ng-model="user.id" ng-options="user.id as user.lastname for user in users" class="form-select" ng-change="selectUser();"></select>
-            <button type="button" class="btn btn-success" ng-click="changeUser();">Сменить пользователя</button>
-        </div>
-
     </div>
 </body>
