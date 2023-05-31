@@ -24,7 +24,7 @@ namespace main.Controllers
         public IActionResult Personal() => View();
         public IActionResult Jobs() => View(_user.GetCurrentUser());
         [HttpPost]
-        public IActionResult Output()=> new {
+        public IActionResult Output()=> Json(new {
             favOptions = new List<jobModel>
             {
                 new jobModel() {Id=0, Name= "Товар №1"},
@@ -37,7 +37,7 @@ namespace main.Controllers
                 new workModel() {Id=1, Name= "18:00-22:00"},
                 new workModel() {Id=2, Name= "22:00-10:00"},
             }.Select(x => new { x.Id, x.Name}),
-        }.ToJsonActionResult();
+        });
         [HttpPost]
         public IActionResult AddToCart([FromBody] CartModel model)
         {
@@ -68,9 +68,9 @@ namespace main.Controllers
         }
         public IActionResult MyCart(int id) => View(_user.GetCurrentUser());
         [HttpPost]
-        public IActionResult OutputCart([FromBody] TestModel model)=> _context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart where PersonId={model.Id}").ToList().ToJsonActionResult();
+        public IActionResult OutputCart([FromBody] TestModel model)=> Json(_context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart where PersonId={model.Id}").ToList());
         [HttpPost]
-        public IActionResult OutputUsers() => _context.Persons.ToList().ToJsonActionResult();
+        public IActionResult OutputUsers() => Json(_context.Persons.ToList());
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
