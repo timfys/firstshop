@@ -1,4 +1,4 @@
-﻿@model Persons
+﻿@model Users
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,15 +36,25 @@
                     </li>                    
                 </ul>
                     <small style="font-size:15px; color: darkslategray;">
-                        @Model.Lastname
+                        @Model.FullName
                     </small>
-                    <form class="form-inline my-2 my-lg-0">
-                        <a class="btn btn-outline-success my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#loginModal" id="loginButton">Вход</a>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0">
-                        <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Home" asp-action="MyCart">Моя корзина</a>
-                    </form>
-            </div>
+                    
+                    @if (Model.Role != 999)
+                    {
+                        <form class="form-inline my-2 my-lg-0">
+                            <a class="btn btn-outline-success my-2 my-sm-0" onclick="logout()" id="logoutButton">Выход</a>
+                        </form>
+                        <form class="form-inline my-2 my-lg-0">
+                            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Home" asp-action="MyCart">Моя корзина</a>
+                        </form>
+                    }
+                    else
+                    {
+                        <form class="form-inline my-2 my-lg-0">
+                            <a class="btn btn-outline-success my-2 my-sm-0" data-bs-toggle="modal" data-bs-target="#loginModal" id="loginButton">Вход</a>
+                        </form>
+                    }
+                </div>
         </div>
     </nav>
 </header>
@@ -66,6 +76,10 @@
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" aria-label="Sizing example input" placeholer="Логин..." id="login">
                         </div>
+                        <label for="basic-url" class="form-label">Пароль</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" aria-label="Sizing example input" placeholer="Пароль..." id="password">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" onclick="login();">Войти</button>
@@ -79,13 +93,26 @@
     </div>
 </footer>
     <script>
-        function login(){
+        var loginValidation;
+        function login() {
             $.ajax({
                 url: "@Url.Action("Change","Shared")",
-                data: JSON.stringify({ id: parseInt($('#login').val()) }),
+                data: JSON.stringify({ login: $('#login').val().toString(), password: $('#password').val().toString() }),
                 type: "POST",
                 'contentType': 'application/json',
-                success: (result) =>{$('#loginModal').modal('hide');window.location.reload()},
+                success: (result) => {
+                    if (result != true){alert('неверный логин/пароль');}
+                    else {$('#loginModal').modal('hide'); window.location.reload();}
+                },
+                error: (e) => alert(JSON.stringify(e)),
+            });
+        }
+        function logout(){
+            $.ajax({
+                url: "@Url.Action("Logout","Shared")",
+                type: "POST",
+                'contentType': 'application/json',
+                success: (result) =>window.location.reload(),
                 error: (e) => alert(JSON.stringify(e)),
             });
         }

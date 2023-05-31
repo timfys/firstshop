@@ -9,10 +9,12 @@ namespace main
 {
     public class User
     {
-        public Persons GetUser(int id) => _context.Persons.Where(x=>x.Id==id).FirstOrDefault();
-        public Persons GetCurrentUser() {
+        public Users GetUser(int id) => _context.Users.Where(x=>x.Id==id).FirstOrDefault();
+        public Users GetUserByLoginPassword(string login, string password) => _context.Users.Where(x => x.Login==login&&x.Password==password).FirstOrDefault();
+
+        public Users GetCurrentUser() {
             CurrentId = Convert.ToInt32(_accessor.HttpContext.Request.Cookies["id"]);
-            return GetUser(CurrentId) != null ? GetUser(Convert.ToInt32(CurrentId)) : GetUser(Convert.ToInt32(999));
+            return GetUser(CurrentId) != null ? GetUser(Convert.ToInt32(CurrentId)) : GetUser(Convert.ToInt32(1));
         }
         private readonly myContext _context;
         private readonly IHttpContextAccessor _accessor;
@@ -24,7 +26,7 @@ namespace main
         }
         public int CurrentId;
 
-        public void Update(Persons user)
+        public void Update(Users user)
         {
             CurrentId = user.Id;
             _accessor.HttpContext.Response.Cookies.Append("id", CurrentId.ToString());

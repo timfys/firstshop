@@ -69,8 +69,7 @@ namespace main.Controllers
         public IActionResult MyCart(int id) => View(_user.GetCurrentUser());
         [HttpPost]
         public IActionResult OutputCart([FromBody] TestModel model)=> Json(_context.CartModel.FromSql($"select id, PersonId UserId, ItemName Item from Cart where PersonId={model.Id}").ToList());
-        [HttpPost]
-        public IActionResult OutputUsers() => Json(_context.Persons.ToList());
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

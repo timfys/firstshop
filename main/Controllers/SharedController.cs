@@ -20,9 +20,32 @@ namespace main.Controllers
         }
         public IActionResult _Layout() => View(_user.GetCurrentUser());
         [HttpPost]
-        public void Change([FromBody] TestModel model)
+        public IActionResult CheckLoginPassword([FromBody] TestModel model)
         {
-            var user = _user.GetUser(model.Id);
+            //bool result=true;
+            //try
+            //{
+            //    _user.GetUserByLoginPassword(model.Login, model.Password);
+            //    result = _user.GetUserByLoginPassword(model.Login, model.Password) != null;
+            //}
+            //catch (NullReferenceException)
+            //{
+            //    result = false;
+            //}
+            return Json(_user.GetUserByLoginPassword(model.Login, model.Password) != null);
+        }
+        [HttpPost]
+        public bool Change([FromBody] TestModel model)
+        {
+            var user = _user.GetUserByLoginPassword(model.Login, model.Password);
+            if(_user.GetUserByLoginPassword(model.Login, model.Password) != null)_user.Update(user);
+            if (_user.GetUserByLoginPassword(model.Login, model.Password) == null) { return false; }
+            else { return true; }
+        }
+        [HttpPost]
+        public void Logout()
+        {
+            var user = _user.GetUser(1);
             _user.Update(user);
         }
 
