@@ -14,7 +14,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <link rel='stylesheet' href="~/css/bootstrap.min.css">
 </head>
-<body ng-app="myapp" ng-controller="HelloController">
+<body>
 <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="background-color: #e3f2fd;">
         <div class="container-fluid">
@@ -96,7 +96,7 @@
         $('#error').fadeOut(1);
         function login() {
             $.ajax({
-                url: "@Url.Action("Change","Shared")",
+                url: "/Shared/Change",
                 data: JSON.stringify({ login: $('#login').val().toString(), password: $('#password').val().toString() }),
                 type: "POST",
                 'contentType': 'application/json',
@@ -109,7 +109,7 @@
         }
         function logout(){
             $.ajax({
-                url: "@Url.Action("Logout","Shared")",
+                url: "/Shared/Logout",
                 type: "POST",
                 'contentType': 'application/json',
                 success: (result) =>window.location.reload(),
