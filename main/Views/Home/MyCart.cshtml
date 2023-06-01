@@ -5,21 +5,26 @@
 <h1>@ViewData["Title"]</h1>
 
 <link rel='stylesheet' href="~/css/bootstrap.min.css">
-<script src="~/js/angular.min.js"></script>
+<script src="~/js/vue.js"></script>
+<script src="~/js/axios.min.js"></script>
 <script>
-    angular.module("myapp", [])
-        .controller("HelloController", function ($scope, $http) {
-            $http.post('@Url.Action("MyCart")');
-            $scope.outputCart=()=>$http.post('@Url.Action("OutputCart")', {id:@Model.Id}).then(r=>{$scope.cart=r.data});  
-            $scope.outputCart();
-            $scope.removeFromCart = (id) => $http.post('@Url.Action("RemoveFromCart")', { id:id }).finally(r => {alert('Удалено успешно'),$scope.outputCart()});
+    window.onload = function () {
+        let app=new Vue({
+            el: '#app',
+            data:{cart:[]},
+            methods:{
+                outputCart(){var that=this;axios.post('@Url.Action("OutputCart")',{id:@Model.Id}).then(r=>that.cart=r.data);},
+                removeFromCart(id){var that=this;axios.post('@Url.Action("RemoveFromCart")',{id:id}).finally(r => {alert('Удалено успешно'),app.outputCart()})}
+            }
         });
+        app.outputCart();
+    }
 </script>
 
-<body ng-app="myapp">
-    <div ng-controller="HelloController">
+<body >
+    <div id="app">
         <h6>Мои товары</h6>
-        <table class="table table-hover" ng-show="cart.length > 0">
+        <table class="table table-hover" v-show="cart.length > 0">
             <thead>
                 <tr>
                     <th id="name" colspan="3" style="border:0;text-align: center; font-weight:bold">№ п/п</th>
@@ -28,15 +33,15 @@
                 </tr>               
             </thead>
             <tbody>
-                <tr ng-repeat="item in cart">
+                <tr v-for="item in cart">
                     <td colspan ="3" style="text-align: center">{{item.id}}</td>
                     <td colspan ="3" style="text-align: center">{{item.userId}}</td>
                     <td colspan ="3" style="text-align: center">{{item.item}}</td>
-                    <td colspan="1" style="text-align: center"><button type="button" class="btn btn-danger" ng-click="removeFromCart(item.id);">Убрать из корзины</button></td>
+                    <td colspan="1" style="text-align: center"><button type="button" class="btn btn-danger" v-on:click="removeFromCart(item.id);">Убрать из корзины</button></td>
                 </tr>         
             </tbody>
         </table>
-        <p style="font-size:15px; color: darkslategray;" ng-hide="cart.length > 0">
+        <p style="font-size:15px; color: darkslategray;" v-show="!cart.length > 0">
             Тут пока пусто
         </p>
     </div>
