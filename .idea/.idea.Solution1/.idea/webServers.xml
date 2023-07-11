@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9c177dce-dd24-4128-bebb-4ffad52f4622" name="ftp://timfytest.somee.com/www.timfytest.somee.com" url="http://www.timfytest.somee.com">
+        <fileTransfer host="www.timfytest.somee.com" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
