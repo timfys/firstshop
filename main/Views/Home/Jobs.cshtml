@@ -1,49 +1,75 @@
 ﻿@model Users
 @{
-    ViewData["Title"] = "Подбор услуг.";
+    ViewData["Title"] = "Подбор услуг";
 }
 <h1>@ViewData["Title"]</h1>
-
 <link rel='stylesheet' href="~/css/bootstrap.min.css">
-<script src = "~/js/angular.min.js"></script>
+<script src="~/js/vue.js"></script>
+<script src="~/js/axios.min.js"></script>
+
 <script>
-         angular.module("myapp", [])
-         .controller("HelloController", function($scope,$http) { 
-            $http.post('@Url.Action("Output")', {id:@Model.Id}).then(function (r) {
-                $scope.favOptions = r.data.favOptions;
-                $scope.favOption = $scope.favOptions[0];
-                $scope.workOptions = r.data.workOptions;
-                $scope.workOption = $scope.workOptions[0];
-                $scope.result = $scope.result == null ? "c 10:00 по 18:00":$scope.result
-                $scope.selectedItem = $scope.selectedItem==null?$scope.favOptions[0].name:$scope.selectedItem;
-                $scope.selectedItemId = $scope.selectedItemId==null ? $scope.favOptions[0].id : $scope.selectedItemId;
-            });
-            $scope.selectJob=function(){
-                res=$scope.workOption.id;
-                switch(res){
-                    case 0: $scope.result = "c 10:00 по 18:00"; break;
-                    case 1: $scope.result = "c 18:00 по 22:00"; break;
-                    case 2: $scope.result = "c 22:00 по 10:00"; break;
+    window.onload = function () {
+        let app = new Vue({
+            el: '#app',
+            data:
+            {
+                favOptions: [],
+                favOption: null,
+                workOptions: [],
+                workOption: null,
+                result: null,
+                selectedItem: null,
+                selectedItemId: null,
+                a:null,
+            },
+            methods: {
+                getData() {
+                    var that=this;
+                    axios.post('/Home/Output')
+                        .then(r => {
+                            that.favOptions = r.data.favOptions;
+                            that.favOption = that.favOptions[0];
+                            that.workOptions = r.data.workOptions;
+                            that.workOption = that.workOptions[0];
+                            that.result = that.result == null ? 'c 10:00 по 18:00' : that.result;
+                            that.selectedItem = that.selectedItem == null ? that.favOptions[0].name : that.selectedItem;
+                            that.selectedItemId = that.selectedItemId == null ? that.favOptions[0].id : that.selectedItemId;
+                        });
+                },
+                selectJob() {
+                    var that=this;
+                    const res = that.workOption.id;
+                    switch (res) {
+                        case 0: that.result = 'c 10:00 по 18:00'; break;
+                        case 1: that.result = 'c 18:00 по 22:00'; break;
+                        case 2: that.result = 'c 22:00 по 10:00'; break;
+                    }
+                    that.selectedItem = that.favOption.name;
+                    that.selectedItemId = that.favOption.id;
+                },
+                addToCart() {
+                    var that = this;
+                    axios.post('/Home/AddToCart', { userId: @Model.Id, item: that.selectedItem })
+                        .finally(() => {
+                            alert('Запрос выполнен успешно');
+                            $('#exampleModal').modal('hide');
+                        });
                 }
-                $scope.selectedItem=$scope.favOption.name;
-                $scope.selectedItemId = $scope.favOption.id;
-            };
-            $scope.addToCart = () => $http.post('@Url.Action("AddToCart")', { userId: @Model.Id, item: $scope.selectedItem }).finally(r => {
-                alert('Запрос выполнен успешно'), $('#exampleModal').modal('hide')
-            })
-         });
+            }
+        });
+        app.getData();
+    }
 </script>
-
-<body ng-app = "myapp">
-<div ng-controller="HelloController">
-    <h6>Подбор услуг</h6>
-
+<body>
+    <div id="app">
         <p style="font-size:13px; color: dimgrey;">Выберите товар и желаемое время доставки</p>
-    <h5>Товар</h5>
-        <select style="width:200px;" ng-model="favOption" ng-options="favOption as favOption.name for favOption in favOptions" ng-change="selectJob();" class="form-select">
+        <h5>Товар</h5>
+        <select style="width:200px;" v-model="favOption" class="form-select" v-on:change="selectJob()">
+            <option v-for="option in favOptions" v-bind:value="option">{{ option.name }}</option>
         </select>
-    <h5>Время доставки</h5>
-        <select style="width:200px;" ng-model="workOption" ng-options="workOption as workOption.name for workOption in workOptions" ng-change="selectJob();" class="form-select">
+        <h5>Время доставки</h5>
+        <select style="width:200px;" v-model="workOption" class="form-select" v-on:change="selectJob()">
+            <option v-for="option in workOptions" :value="option">{{ option.name }}</option>
         </select>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Узнать результат!</button>
@@ -56,14 +82,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                     </div>
                     <div class="modal-body">
-                        Мы готовы доставить вам {{selectedItem}} {{result}} !
+                        Мы готовы доставить вам {{ selectedItem }} {{ result }}!
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-click="addToCart();">Добавить в корзину</button>
+                        <button type="button" class="btn btn-primary" v-on:click="addToCart()">Добавить в корзину</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отлично</button>
                     </div>
                 </div>
             </div>
         </div>
-</div>
+    </div>
 </body>

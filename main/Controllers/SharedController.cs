@@ -20,20 +20,8 @@ namespace main.Controllers
         }
         public IActionResult _Layout() => View(_user.GetCurrentUser());
         [HttpPost]
-        public IActionResult CheckLoginPassword([FromBody] TestModel model)
-        {
-            //bool result=true;
-            //try
-            //{
-            //    _user.GetUserByLoginPassword(model.Login, model.Password);
-            //    result = _user.GetUserByLoginPassword(model.Login, model.Password) != null;
-            //}
-            //catch (NullReferenceException)
-            //{
-            //    result = false;
-            //}
-            return Json(_user.GetUserByLoginPassword(model.Login, model.Password) != null);
-        }
+        public IActionResult CheckLoginPassword([FromBody] TestModel model)=> Json(_user.GetUserByLoginPassword(model.Login, model.Password) != null);
+        
         [HttpPost]
         public bool Change([FromBody] TestModel model)
         {

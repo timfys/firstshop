@@ -21,7 +21,6 @@ namespace main.Controllers
         public IActionResult Index() => View(_user.GetCurrentUser());
 
         public IActionResult Privacy() => View(_user.GetCurrentUser());
-        public IActionResult Personal() => View(_user.GetCurrentUser());
         public IActionResult Jobs() => View(_user.GetCurrentUser());
         [HttpPost]
         public IActionResult Output()=> Json(new {
